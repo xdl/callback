@@ -12,12 +12,12 @@ require.config({
 			deps: ['Underscore', 'jQuery', 'text'],
 			exports: "Backbone"
 		},
-		"define": {
-			deps: ['jQuery']
+		"callBack": {
+			deps: ['Backbone']
 		}
 	}
 });
 
-require(["Backbone","callBack"], function(b, app) {
+require(["callBack"], function(app) {
 	app.initialise();
 });

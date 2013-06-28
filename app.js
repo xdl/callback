@@ -9,7 +9,6 @@ var mongoose = require("mongoose");
 //database path:
 var dbPath;
 
-
 app.configure(function() {
 	app.set("view engine", "jade");
 	app.use(express.static(__dirname + "/public"));
@@ -18,7 +17,7 @@ app.configure(function() {
 	app.use(express.session({secret: "123"}));
 
 	var env = app.get('env');
-	//env = 'production'; //just checking...
+	env = 'production'; //just checking...
 	if (env == 'development')
 		dbPath = 'mongodb://localhost/callback';
 	else if (env == 'production')
