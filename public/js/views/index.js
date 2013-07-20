@@ -1,17 +1,16 @@
-define(['text!templates/index.html'], function(IndexTemplate) {
-	var IndexView = Backbone.View.extend({
+define(['views/base', 'text!templates/index.html'], function(BaseView, IndexTemplate) {
+	var IndexView = BaseView.extend({
 		el: $("#content"),
-		initialize: function() {
 
-		},
 		events: {
-			'submit form#login':'handleLogin',
-			'click button#populate_sample_users':'test_populateUsers',
-			'click button#show_users': 'test_showUsers',
-			'click button#remove_users': 'test_removeUsers'
+			'submit form#login':'handleLogin'
 		},
 		render: function() {
 			this.$el.html(IndexTemplate);
+
+			//inserting the subview
+			//this.debug = new DebugView();
+			//this.debug.setElement(this.$('.debug_panel')).render();
 		},
 
 		//testing stuff here.
@@ -19,34 +18,24 @@ define(['text!templates/index.html'], function(IndexTemplate) {
 			e.preventDefault();
 			var username = $('input[name=user]').val();
 			var password = $('input[name=password]').val();
-			$.post('/login', {
-				username: username,
-				password: password
-			},
-			function(payload) {
-				console.log(payload);
-			});
-		},
 
-		test_populateUsers: function() {
-			console.log('populating...');
-			$.post('/test_populateUsers', function(payload) {
-				console.log(payload);
-			});
-		},
-
-		test_showUsers: function() {
-			console.log('showing users...');
-			$.post('/test_showUsers', function(payload) {
-				console.log(payload);
-			});
-		},
-		test_removeUsers: function() {
-			console.log('removing users...');
-			$.post('/test_removeUsers', function(payload) {
-				console.log(payload);
+			$.ajax('/login', {
+				type: "POST",
+				data: {username: username, password: password},
+				success: function() {
+					console.log('successfully logged in');
+					window.location.hash = 'l_index';
+				},
+				error: function() {
+					console.log('failed login');
+				}
 			});
 		}
+
+		//get rid of the subview
+	//	destroy: function() {
+	//		this.debug.undelegateEvents();
+	//	}
 
 	});
 

@@ -1,27 +1,23 @@
-define(["router"], function(router) {
+define(["router", 'views/debug'], function(router, DebugView) {
 	var initialise = function() {
-		checkLogin(runApplication);
-	}
+		
+		//debugging:
+		var debug_view = new DebugView();
+		debug_view.render();
 
-	var checkLogin = function(callback) {
 		$.ajax("/accounts/authenticated", {
 			method: "POST",
-			success: function() {
-				callback(true);
+			success: function(data) {
+				window.location.hash = 'l_index';
 			},
-			error: function() {
-				callback(false);
+			error: function(data) {
+				window.location.hash = "index";
+			},
+			complete: function() {
+				Backbone.history.start();
 			}
 		});
-	};
 
-	var runApplication = function(authenticated) {
-		if (!authenticated) {
-			window.location.hash = "index";
-		} else {
-			window.location.hash = "l_index";
-		}
-		Backbone.history.start();
 	};
 
 	return {

@@ -1,0 +1,5 @@
+<input type='radio' name='task' <%if (active) print('checked')%>>
+
+<span><%=task_name%>, delegated to by <%=delegator%></span>
+
+<button class='mark_done' <%if (!active) print('disabled')%>>Done</button>

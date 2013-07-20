@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Backbone subview testing</title>
+</head>
+<body>
+	<div id="content"></div>
+	<script src="../public/js/libs/jquery-2.0.2.min.js"></script>
+	<script src="../public/js/libs/underscore-min.js"></script>
+	<script src="../public/js/libs/backbone.js"></script>
+
+	<script type='text/template' id='outer'>
+		<div>
+			<span>Imma outer class!</span>
+			<button id='outer_button'>Click me</button>
+			<div class='inner_here'></div>
+		</div>
+	</script>
+
+	<script type='text/template' id='inner'>
+		<div>
+			<span>Imma inner class!</span>
+			<button>Click me</button>
+		</div>
+	</script>
+	<script>
+		$(function(){
+			console.log('jq working');
+			var BaseView = Backbone.View.extend({
+				testvar: "I am baseView",
+
+				//for any nested views
+				destroy: function() {
+					console.log('base destroy');
+				}
+			});
+
+			var OuterView = BaseView.extend({
+				el: $("#content"),
+
+				content: $('#outer').html(),
+
+				events: {
+					'click button#outer_button': 'buttonClicked'
+				},
+
+				initialize: function() {
+					console.log('initialised!');
+					this.inner = new InnerView();
+					this.render();
+				},
+
+				render: function() {
+					console.log('rendering...');
+					this.$el.html(this.content);
+					this.inner.setElement(this.$('.inner_here')).render();
+
+				},
+
+				destroy: function() {
+					console.log('outer destroy');
+				},
+
+				buttonClicked: function() {
+					console.log('button clicked');
+					this.destroy();
+				}
+			});
+
+			var InnerView = BaseView.extend({
+				content: $('#inner').html(),
+				initialize: function() {
+				},
+				render: function() {
+					this.$el.html(this.content);
+				}
+			});
+
+			var outer = new OuterView();
+		});
+	</script>
+</body>
+</html>

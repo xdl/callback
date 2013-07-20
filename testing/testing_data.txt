@@ -1,0 +1,52 @@
+{
+	"users": [
+		
+		{"username": "admin",
+		"password": "admin"
+		}, 
+
+		{"username": "homer",
+		"password": "homer",
+		"team": "simpsons"
+		},
+
+		{"username": "marge",
+		"password": "marge",
+		"team": "simpsons"
+		}
+
+	],
+	
+	"tasks": [
+
+		{"delegator": "marge",
+		"delegate": "homer",
+		"task_name": "take out trash",
+		"listeners": ["marge"],
+		"manhours": 0
+		},
+
+		{"delegator": "marge",
+		"delegate": "homer",
+		"task_name": "take in groceries",
+		"listeners": ["marge"],
+		"manhours": 5
+		},
+
+		{"delegator": "homer",
+		"delegate": "marge",
+		"task_name": "sexy times",
+		"listeners": ["homer"],
+		"manhours": 4
+		},
+
+		{"delegator": "homer",
+		"delegate": "marge",
+		"task_name": "bring my lunch to work",
+		"listeners": ["homer"],
+		"manhours": 2
+		}
+
+
+	]
+}

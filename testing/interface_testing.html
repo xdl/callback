@@ -1,0 +1,253 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Interface testing</title>
+		<link rel="stylesheet" href="css/qunit-1.12.0.css">
+	</head>
+	<body>
+		<div id='qunit'></div>
+		<div id='qunit-fixture'></div>
+		<script src='js/qunit-1.12.0.js'></script>
+		<script src='js/callback.js'></script>
+		<script>
+			window.onload = function() {
+				test("failing objects, unrecognised methods", function() {
+
+					//expect(0);
+
+
+					var a0 = 'blahblah("take out trash", u2);';
+
+					var e0 = {
+						obj: 'not recognised',
+						method: 'not processed',
+						status: 'fail',
+						extra: 'method or object not recognised',
+						info: {}
+					}
+
+					//deep equal for comparing objects.
+					deepEqual(callback.process(a0), e0, 'object fails correctly, bad method.');
+
+					var e3 = {
+						obj: 'idu1111',
+						method: 'not recognised',
+						status: 'fail',
+						extra: 'user method not recognised'
+					}
+
+					var a3 = 'u1.message("blah", u1);';
+
+					//deepEqual(callback.process(a3), e3, 'response fails correctly - can\'t access private method');
+
+					var e5 = {
+						obj: 'idt1111',
+						method: 'not recognised',
+						status: 'fail',
+						extra: 'task method not recognised'
+					}
+
+					var a5 = 't1.listTasks();';
+
+					//deepEqual(callback.process(a5), e5, 'response fails correctly - no such method on task');
+
+				});
+
+				test('message', function() {
+
+
+					var e1 = {
+						obj: 'idu0000',
+						method: 'message',
+						status: 'ok',
+						extra: '',
+						info: {
+							message: 'blah',
+							recipient: 'u1'
+						}
+					}
+
+					var a1 = 'message("blah", u1);';
+
+					deepEqual(callback.process(a1), e1, 'response passes correctly - message');
+
+					var e2 = 'ok';
+					var a2 = 'message("Hey there, I hope you is fine. This is my message!", u1);';
+
+					deepEqual(callback.process(a2).status, e2, 'general message testing');
+					//console.log(callback.process(a1));
+
+					var e3 = 'fail';
+					var a3 = 'message("Hey there, I hope you is fine. This is my message!", u10);';
+
+					deepEqual(callback.process(a3).status, e3, 'bad arguments.');
+
+				});
+
+				test('list tasks', function() {
+
+
+					var e4 = {
+						obj: 'idu0000',
+						method: 'listTasks',
+						status: 'ok',
+						extra: '',
+						info: {
+							toList: 'all'
+						}
+					}
+
+					var a4 = 'listTasks();';
+
+					deepEqual(callback.process(a4), e4, 'response passes correctly - accessing public method');
+
+					var e9 = {
+						obj: 'idu0000',
+						method: 'listTasks',
+						status: 'fail',
+						info: {},
+						extra: 'bad arguments'
+					}
+
+					var a9 = 'listTasks("Hey! Lets go!", u4);';
+
+					deepEqual(callback.process(a9), e9, 'fails correctly - bad argument.');
+
+					var e10 = {
+						obj: 'idu1111',
+						method: 'listTasks',
+						status: 'fail',
+						info: {},
+						extra: 'bad arguments'
+					}
+
+					var a10 = 'u1.listTasks("Hey! Lets go!", u4);';
+
+					deepEqual(callback.process(a10), e10, 'fails correctly - bad argument.');
+
+					var e10 = {
+						obj: 'idu1111',
+						method: 'listTasks',
+						status: 'ok',
+						info: {toList: 'pending'},
+						extra: ''
+					}
+
+					var a10 = 'u1.listTasks("pending");';
+
+					deepEqual(callback.process(a10), e10, 'passes correctly - good arguments.');
+
+					var e11 = 'fail';
+					var a11 = 'u1.listTasks("finisheds");';
+
+					deepEqual(callback.process(a11).status, e11, 'fails correctly - bad argument.');
+				});
+
+				test('done', function() {
+
+
+					var e6 = {
+						obj: 'idt1111',
+						method: 'done',
+						status: 'ok',
+						extra: '',
+						info: {
+							comment: ''
+						}
+					}
+
+					var a6 = 't1.done();';
+
+					deepEqual(callback.process(a6), e6, 'response passes correctly - accessing method on task');
+
+					var e1 = 'ok';
+					var a1 = 't1.done("yeah boi")';
+					deepEqual(callback.process(a1).status, e1, 'response passes correctly.');
+				});
+
+
+				test('createTask', function() {
+
+					var e1 = 'ok';
+					var a1 = 'createTask("Filler, 123, 41234", u2, u3, u4, createTask("do the dishes", u1));';
+					deepEqual(callback.process(a1).status, e1, 'recursive createTask seems to work.');
+
+					var e2 = 'ok';
+					var a2 = 'createTask("Filler", u2);';
+					deepEqual(callback.process(a2).status, e2, 'passes correctly - good arguments.');
+
+					var e3 = {
+						obj: 'idu0000',
+						method: 'createTask',
+						status:'ok',
+						extra: '',
+						info: {
+							tasks: ['rats1'],
+							users: ['u1'],
+							callback: 't1.done()'
+						}
+					}
+
+					var a3 = 'createTask("rats1", u1, t1.done());';
+					deepEqual(callback.process(a3), e3, 'passes correctly, regular callback');
+
+					var e4  = 'ok';
+
+					var a4 = 'createTask("rats1, rats2, rats3", u1, u2, u4, t1.done());';
+					deepEqual(callback.process(a4).status, e4, 'passes correctly, adding callback');
+
+
+
+					var e5 = 'ok';
+					var a5 = 'createTask("rats", u1, listTasks("pending"));';
+					deepEqual(callback.process(a5).status, e5, 'passes correctly - correct callback args');
+
+					var e7 = {
+						obj: 'idu0000',
+						method: 'createTask',
+						status: 'ok',
+						extra: '',
+						info: {
+							callback: 'default',
+							tasks: ['yeah', '123', 'boy'],
+							users: ['u2', 'u0', 'u1']
+						}
+					}
+
+					var a7 = 'createTask("yeah, 123, boy", u2, u0,u1);';
+
+					deepEqual(callback.process(a7), e7, 'response passes correctly - correct argument parsing.');
+				});
+
+				//todo:
+
+				test('amend', function() {
+					var e1 = 'ok';
+					var a1 = 't1.amend("new task", u2)';
+					deepEqual(callback.process(a1).status, e1, 'amend delegates correctly.');
+					
+				});
+
+				test('delete', function() {
+					var e1 = 'ok';
+					var a1 = 't1.delete();';
+					deepEqual(callback.process(a1).status, e1, 'delete working');
+				});
+
+				test('changeTask', function() {
+					var e1 = 'ok';
+					var a1 = 'changeTask(t2);';
+					deepEqual(callback.process(a1).status, e1, 'changeTask working');
+					console.log(callback.process(a1));
+				});
+
+			}
+
+			//testing: qunit-fixture is reset after each test.
+			//asyncTest for asynchronous testing. Use start() to start the test.
+			//expect(int) tells you the number of assetions to expect.
+			//modules
+		</script>
+	</body>
+</html>

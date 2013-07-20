@@ -4,7 +4,8 @@ require.config({
 		Backbone: "libs/backbone",
 		jQuery: "libs/jquery-2.0.2.min",
 		Underscore: "libs/underscore-min",
-		text: "libs/text"
+		text: "libs/text",
+		templates: "../templates"
 	},
 
 	shim: {
