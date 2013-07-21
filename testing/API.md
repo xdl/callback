@@ -10,8 +10,10 @@
 * message(String, User[]): void
 
 ###Public
-* listActivities([String = "all"]):String
-* listTasks(): String  //other args: pending, finished, active, all
+* showActivities([String = "all"]):String
+* showTasks(): String  //other args: finished, active, todo, all
+* showAPI(): //brings up the manual
+* showUsers()
 
 ##Task
 
@@ -19,8 +21,11 @@
 * amend(String):void 
 * delete(): void
 
-###Public
+###Assigned
 * done([String]): void
+
+###Public
+* describe():void
 
 ---
 
@@ -39,7 +44,11 @@ createTask({
 subscribe(this);
 
 createTask("Take out the trash", u2, t1.done());
-createTask("blah", u2, changeTask(t3));
+createTask("blah", u2, function() {changeTask(t3)});
+
+createTask('blah', u2, function(){changeTask(t3)});
+
+createTask('blah, another thing, a few more times.', u2, u3, u4, t1.done());
 
 createTask("Take out the trash", u2);
 createTask("Take out the trash, bring the dogs in, eat cake", u2, u3, u4);

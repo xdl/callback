@@ -14,13 +14,10 @@
 			window.onload = function() {
 				test("failing objects, unrecognised methods", function() {
 
-					//expect(0);
-
-
 					var a0 = 'blahblah("take out trash", u2);';
 
 					var e0 = {
-						obj: 'not recognised',
+						context: 'not recognised',
 						method: 'not processed',
 						status: 'fail',
 						extra: 'method or object not recognised',
@@ -31,15 +28,20 @@
 					deepEqual(callback.process(a0), e0, 'object fails correctly, bad method.');
 
 					var e3 = {
-						obj: 'idu1111',
+						context: {
+							access: 'public',
+							object: 'idu1111',
+							type: 'user'
+						},
 						method: 'not recognised',
 						status: 'fail',
-						extra: 'user method not recognised'
+						extra: 'user method not recognised',
+						info: {}
 					}
 
 					var a3 = 'u1.message("blah", u1);';
 
-					//deepEqual(callback.process(a3), e3, 'response fails correctly - can\'t access private method');
+					deepEqual(callback.process(a3), e3, 'response fails correctly - can\'t access private method');
 
 					var e5 = {
 						obj: 'idt1111',
@@ -48,7 +50,7 @@
 						extra: 'task method not recognised'
 					}
 
-					var a5 = 't1.listTasks();';
+					var a5 = 't1.showTasks();';
 
 					//deepEqual(callback.process(a5), e5, 'response fails correctly - no such method on task');
 
@@ -58,7 +60,11 @@
 
 
 					var e1 = {
-						obj: 'idu0000',
+						context: {
+							object: 'idu0000',
+							type: 'user',
+							access: 'private'
+						},
 						method: 'message',
 						status: 'ok',
 						extra: '',
@@ -85,61 +91,61 @@
 
 				});
 
-				test('list tasks', function() {
+				test('show tasks', function() {
 
 
-					var e4 = {
-						obj: 'idu0000',
-						method: 'listTasks',
+					var e1 = {
+						method: 'showTasks',
 						status: 'ok',
 						extra: '',
 						info: {
-							toList: 'all'
+							toShow: 'all'
+						},
+						context: {
+							object: 'idu0000',
+							type: 'user',
+							access: 'private'
 						}
 					}
 
-					var a4 = 'listTasks();';
+					var a1 = 'showTasks();';
 
-					deepEqual(callback.process(a4), e4, 'response passes correctly - accessing public method');
+					deepEqual(callback.process(a1), e1, 'response passes correctly - accessing public method');
 
 					var e9 = {
-						obj: 'idu0000',
-						method: 'listTasks',
+						method: 'showTasks',
 						status: 'fail',
 						info: {},
-						extra: 'bad arguments'
+						extra: 'bad arguments',
+						context: {
+							object: 'idu0000',
+							type: 'user',
+							access: 'private'
+						}
 					}
 
-					var a9 = 'listTasks("Hey! Lets go!", u4);';
+					var a9 = 'showTasks("Hey! Lets go!", u4);';
 
 					deepEqual(callback.process(a9), e9, 'fails correctly - bad argument.');
 
 					var e10 = {
-						obj: 'idu1111',
-						method: 'listTasks',
-						status: 'fail',
-						info: {},
-						extra: 'bad arguments'
-					}
-
-					var a10 = 'u1.listTasks("Hey! Lets go!", u4);';
-
-					deepEqual(callback.process(a10), e10, 'fails correctly - bad argument.');
-
-					var e10 = {
-						obj: 'idu1111',
-						method: 'listTasks',
+						method: 'showTasks',
 						status: 'ok',
-						info: {toList: 'pending'},
-						extra: ''
+						info: {toShow: 'todo'},
+						extra: '',
+						context: {
+							object: 'idu1111',
+							type: 'user',
+							access: 'public'
+						}
 					}
 
-					var a10 = 'u1.listTasks("pending");';
+					var a10 = 'u1.showTasks("todo");';
 
 					deepEqual(callback.process(a10), e10, 'passes correctly - good arguments.');
 
 					var e11 = 'fail';
-					var a11 = 'u1.listTasks("finisheds");';
+					var a11 = 'u1.showTasks("finisheds");';
 
 					deepEqual(callback.process(a11).status, e11, 'fails correctly - bad argument.');
 				});
@@ -148,12 +154,16 @@
 
 
 					var e6 = {
-						obj: 'idt1111',
 						method: 'done',
 						status: 'ok',
 						extra: '',
 						info: {
 							comment: ''
+						},
+						context: {
+							object: 'idt1111',
+							type: 'task',
+							access: 'private'
 						}
 					}
 
@@ -162,8 +172,25 @@
 					deepEqual(callback.process(a6), e6, 'response passes correctly - accessing method on task');
 
 					var e1 = 'ok';
-					var a1 = 't1.done("yeah boi")';
+					var a1 = 't4.done("yeah boi")';
 					deepEqual(callback.process(a1).status, e1, 'response passes correctly.');
+
+					var e7 = {
+						method: 'not recognised',
+						status: 'fail',
+						extra: 'task method not recognised',
+						info: {
+						},
+						context: {
+							object: 'idt7777',
+							type: 'task',
+							access: 'public'
+						}
+					}
+
+					var a7 = 't7.done();';
+
+					deepEqual(callback.process(a7), e7, 'response fails correctly - can\'t mark done a public task.');
 				});
 
 
@@ -178,7 +205,6 @@
 					deepEqual(callback.process(a2).status, e2, 'passes correctly - good arguments.');
 
 					var e3 = {
-						obj: 'idu0000',
 						method: 'createTask',
 						status:'ok',
 						extra: '',
@@ -186,6 +212,11 @@
 							tasks: ['rats1'],
 							users: ['u1'],
 							callback: 't1.done()'
+						},
+						context: {
+							object: 'idu0000',
+							type: 'user',
+							access: 'private'
 						}
 					}
 
@@ -200,11 +231,10 @@
 
 
 					var e5 = 'ok';
-					var a5 = 'createTask("rats", u1, listTasks("pending"));';
+					var a5 = 'createTask("rats", u1, showTasks("todo"));';
 					deepEqual(callback.process(a5).status, e5, 'passes correctly - correct callback args');
 
 					var e7 = {
-						obj: 'idu0000',
 						method: 'createTask',
 						status: 'ok',
 						extra: '',
@@ -212,12 +242,22 @@
 							callback: 'default',
 							tasks: ['yeah', '123', 'boy'],
 							users: ['u2', 'u0', 'u1']
+						},
+						context: {
+							object: 'idu0000',
+							type: 'user',
+							access: 'private'
 						}
 					}
 
 					var a7 = 'createTask("yeah, 123, boy", u2, u0,u1);';
 
 					deepEqual(callback.process(a7), e7, 'response passes correctly - correct argument parsing.');
+
+					var e8 = 'ok';
+
+					var a8 = 'createTask("hello", u2, function() {t1.done();});';
+					deepEqual(callback.process(a8).status, e8, 'function wrapper works');
 				});
 
 				//todo:
@@ -239,7 +279,6 @@
 					var e1 = 'ok';
 					var a1 = 'changeTask(t2);';
 					deepEqual(callback.process(a1).status, e1, 'changeTask working');
-					console.log(callback.process(a1));
 				});
 
 			}
