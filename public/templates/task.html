@@ -1,0 +1,25 @@
+<code><%=task_id%></code>
+<span>
+	<% if (status == 'todo') { %>
+		<%=task_name%>
+	<% } else { %>
+		<del><%=task_name%></del>
+	<% } %>
+</span>
+
+<div class="details">
+	<ul>
+		<li>Delegated to by: <%=delegator%></li>
+		<li>Callback: <%=callback%> </li>
+		<li>Delegation date: <%=delegation_date%> </li>
+
+		<% if (typeof(date_done) != 'undefined') { %>
+			<li class='ifdone'>Date finished: <%=date_done%> </li>
+		<% } %>
+
+		<% if (typeof(comment) != 'undefined') { %>
+			<li class='ifdone'>Closing comments: <%=comment%> </li>
+		<% } %>
+
+	</ul>
+</div>

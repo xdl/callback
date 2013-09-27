@@ -1,0 +1,44 @@
+code {
+  background-color: #151515; }
+
+string {
+  color: #a8ff60; }
+
+method {
+  color: #ffd2a7; }
+
+body {
+  font-family: "Consolas";
+  background-color: black;
+  color: white; }
+
+.api {
+  border: 1px grey solid;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  position: fixed;
+  top: 5%;
+  left: 5%;
+  z-index: 999;
+  background-color: black;
+  height: 90%;
+  width: 90%;
+  margin: 0 auto;
+  padding: 5px; }
+  .api #closeapi {
+    float: right; }
+
+a {
+  color: #96cbfe; }
+
+input {
+  font-family: "Consolas"; }
+
+::-webkit-input-placeholder {
+  font-family: "Consolas"; }
+
+::-moz-placeholder {
+  font-family: "Consolas"; }
+
+:-ms-input-placeholder {
+  font-family: "Consolas"; }

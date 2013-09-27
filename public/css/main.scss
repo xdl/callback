@@ -1,0 +1,64 @@
+$ir_black_green: #A8FF60;
+$ir_black_method: #FFD2A7;
+$code_background: #151515;
+
+code {
+	background-color:$code_background;
+}
+
+string {
+	color: $ir_black_green;
+}
+
+method {
+	color:$ir_black_method;
+}
+
+body {
+	font-family: "Consolas";
+	background-color: black;
+	color: white;
+}
+
+.api {
+	border: 1px grey solid;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	position:fixed;
+	top: 5%;
+	left: 5%;
+	z-index: 999;
+	background-color:black;
+	height: 90%;
+	width: 90%;
+	margin: 0 auto;
+	padding: 5px;
+
+	#closeapi {
+		float: right;
+	}
+
+}
+
+a {
+	color: #96cbfe;
+}
+
+input {
+	font-family: "Consolas";
+}
+
+//Monospace the placeholder text
+::-webkit-input-placeholder {
+	font-family: "Consolas"
+}
+
+::-moz-placeholder { 
+	font-family: "Consolas"
+}
+
+:-ms-input-placeholder {
+	font-family: "Consolas"
+}
+
+
