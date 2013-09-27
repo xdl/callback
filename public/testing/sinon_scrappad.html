@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <title>sinon testing</title>
+        <link href="css/qunit-1.12.0.css" rel="stylesheet" />
+    </head>
+    <body>
+        <h1 id="qunit-header">qunit/sinon.js test</h1>
+        <h2 id="qunit-banner"></h2>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+		<script src="js/jquery-2.0.2.min.js"></script>
+		<script src="js/qunit-1.12.0.js"></script>
+		<script src="js/sinon-1.7.3.js"></script>
+		<script src="js/sinon-qunit-1.0.0.js"></script>
+		<script>
+			test("just checking....", function() {
+				var host = {
+					makeCall:function() {
+						//woof!
+						return 1;
+					}
+				}
+				//var spy1 = this.spy(host); //can't do this! needs to be wrapped onto a method.
+				var spy1 = this.spy(host, 'makeCall'); //spying on makeCall
+				host.makeCall();
+
+				equal(true, spy1.calledOnce, 'called once'); //nice! it works
+				equal(false, spy1.calledWith(''), 'called with no arguments/empty string');
+
+
+				var testobj = {rats:"whiskers"};
+
+				host.makeCall(testobj);
+
+				equal(false, spy1.calledOnce, 'fails if called twice'); //fails if called twice.
+				equal(true, spy1.calledWith(testobj), 'yep, called with that object');
+				equal(true, spy1.calledWith({rats:"whiskers"}), 'not the same object but contains the same things'); //huh. This works as well, apparently.
+			});
+		</script>
+    </body>
+</html>
