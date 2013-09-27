@@ -1,54 +1,72 @@
 define(
-	['views/base', 'text!templates/l_index.html', 'views/task_incoming', 'views/task_outgoing', 'models/TaskCollection', 'views/user_panel', 'models/UserCollection'], 
-	function(BaseView, L_IndexTemplate, TaskIncoming, TaskOutgoing, TaskCollection, UserPanel, UserCollection) {
+	['views/base', 'text!templates/l_index.html', 'views/dashboard', 'views/task_panel', 'models/TaskCollection', 'views/user_panel', 'views/api', 'models/UserCollection', 'views/cmd'], 
+	function(BaseView, L_IndexTemplate, Dashboard, TaskPanel, TaskCollection, UserPanel, Api, UserCollection, Cmd) {
 	var L_IndexView = BaseView.extend({
 		el: $("#content"),
 		initialize: function() {
+
+			this.childViews = []; //for easy unbinding later on.
 			//this.listenTo(this.model, 'change', this.render);
+			
+			//listeners:
+			
+			//directory for sharing
+			var Directory = {
+				tasks: {
+					priv: {},
+					assigned: {},
+					pub: {}
+				},
+				users: {
+					priv: {},
+					pub: {}
+				}
+			};
+			
+			//dashboard stuff.
+			this.dashboard = new Dashboard({model: this.model, Directory: Directory});
+			this.childViews.push(this.dashboard);
 
-			//task incoming stuff.
-			var incoming_tasks_collection = new TaskCollection();
-			incoming_tasks_collection.url = '/users/me/tasks';
-			this.task_incoming = new TaskIncoming({model: this.model, collection: incoming_tasks_collection}); //the model contains the User details, the collection contains the tasks.
-
-			//task outgoing stuff.
-			//var outgoing_tasks_collection = new TaskCollection();
-			//outgoing_tasks_collection.url = '/users/me/tasks';
+			//task panel stuff.
+			var tasks_collection = new TaskCollection();
+			tasks_collection.url = '/tasks';
+			this.taskPanel = new TaskPanel({model: this.model, collection: tasks_collection, Directory: Directory}); //the model contains the User details, the collection contains the tasks.
+			this.childViews.push(this.taskPanel);
 			
 			//user panel stuff.
-			var user_collection = new UserCollection();
-			var team = this.model.toJSON().team;
-			user_collection.url = '/users/me/team/'+team;
-			this.user_panel = new UserPanel({model: this.model, collection: user_collection}); //model contains the User details, collection contains the tasks.
-			
+			var users_collection = new UserCollection();
+			//var team = this.model.toJSON().team;
+			users_collection.url = '/users';
+
+			this.userPanel = new UserPanel({model: this.model, collection: users_collection, Directory: Directory}); //model contains the User details, collection contains the tasks.
+			this.childViews.push(this.userPanel);
+
+			//cmd stuff. Also, initiates the callback.initialize and points to the directory.
+			this.cmd = new Cmd({tasks: tasks_collection, users: users_collection, Directory: Directory});	
+			this.childViews.push(this.cmd);
+
+			//api stuff.
+			this.api = new Api();
+			this.childViews.push(this.api);
+
 		},
 		template: _.template(L_IndexTemplate),
 
-		events: {
-			'click button#logout': 'handleLogout'
-		},
-
 		render: function() {
-			this.$el.html(this.template(this.model.toJSON()));
+			this.$el.html(this.template);
 
-
+			//dashboard
+			this.dashboard.setElement(this.$('.dashboard')).render();
 			//task panel stuff
-			this.task_incoming.setElement(this.$('.task_incoming')).render();
-
+			this.taskPanel.setElement(this.$('.task_panel')).render('todo');
 			//user panel stuff
-			this.user_panel.setElement(this.$('.user_panel')).render();
+			this.userPanel.setElement(this.$('.user_panel')).render();
+			//cmd
+			this.cmd.setElement(this.$('.cmd')).render();
+			//api
+			this.api.setElement(this.$('.api')).render();
 
-		},
-
-		handleLogout: function() {
-			console.log('logging out');
-			$.post('/logout', function() {
-				console.log('sucessfully logged out. redirecting...');
-				window.location.hash = 'index';
-			});
 		}
-
-
 
 	});
 

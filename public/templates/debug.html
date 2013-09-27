@@ -1,12 +1,12 @@
 <div style='border: 1px black solid'>
 	<span>Testing panel</span><br/>
-	<button id="populate_sample_users">Populate users</button><br/>
-	<button id="show_users">Show users</button><br/>
-	<button id="remove_users">Remove users</button><br/>
+	<button id="populate_sample_users">Populate users</button>
+	<button id="show_users">Show users</button>
+	<button id="remove_users">Remove users</button>
 	<br/>
-	<button id="populate_sample_tasks">Populate tasks</button><br/>
-	<button id="show_tasks">Show tasks</button><br/>
-	<button id="remove_tasks">Remove tasks</button><br/>
+	<button id="populate_sample_tasks">Populate tasks</button>
+	<button id="show_tasks">Show tasks</button>
+	<button id="remove_tasks">Remove tasks</button>
 	<br/>
 	<button id="remove_everything">Remove everything</button>
 	<br/>
@@ -16,5 +16,36 @@
 		<span>Task name: </span><input name='task_name'/><br/>
 		<span>Delegate to: </span><input name='delegate'/><br/>
 		<button id="add_task">Add task</button>
+	</fieldset>
+
+	<fieldset>
+		<legend>Triggering commands</legend>
+		<button class="panelTesting">createTask('do this');</button>
+		<button class="panelTesting">createTask('do this', u0);</button>
+		<button class="panelTesting">createTask("do this", u1);</button>
+		<button class="panelTesting">createTask("do this, then that, finally this");</button>
+		<button class="panelTesting">createTask("do this, that", u0, u1);</button>
+		<button class="panelTesting">createTask("do this", u1, t3.done());</button>
+		<button class="panelTesting">createTask("do this", u0, t3.done());</button>
+		<button class="panelTesting">createTask("do this, then that" u1, u0, t3.done());</button>
+		<button class="panelTesting">t4.done();</button>
+		<button class="panelTesting">t2.done('that took a long time!');</button>
+		<button class="panelTesting">changeTask(t1);</button>
+		<button class="panelTesting">changeTask(t2);</button>
+		<button class="panelTesting">t1.describe()</button>
+		<button class="panelTesting">showTasks('done')</button>
+		<button class="panelTesting">showTasks('todo')</button>
+		<button class="panelTesting">showTasks('all')</button>
+		<button class="panelTesting">u1.describe()</button>
+		<!--<button class="panelTesting">createTask("do this, that", u0, u1);</button>-->
+	</fieldset>
+
+	<fieldset>
+	    <legend>Inspection</legend>
+		<button id="task_collection">Collection of tasks</button>
+		<button id="directory">Current Directory</button>
+		<button id="model">User model</button>
+		<button id="debug_callback">Callback</button>
+		<button id='getsession'>Get session</button>
 	</fieldset>
 </div>

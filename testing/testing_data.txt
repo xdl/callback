@@ -5,13 +5,21 @@
 		"password": "admin"
 		}, 
 
+
 		{"username": "homer",
 		"password": "homer",
 		"team": "simpsons"
 		},
-
 		{"username": "marge",
 		"password": "marge",
+		"team": "simpsons"
+		},
+		{"username": "bart",
+		"password": "bart",
+		"team": "simpsons"
+		},
+		{"username": "lisa",
+		"password": "lisa",
 		"team": "simpsons"
 		}
 
@@ -21,32 +29,86 @@
 
 		{"delegator": "marge",
 		"delegate": "homer",
-		"task_name": "take out trash",
-		"listeners": ["marge"],
-		"manhours": 0
+		"task_name": "take out garbage",
+		"status": "todo"
 		},
-
 		{"delegator": "marge",
 		"delegate": "homer",
-		"task_name": "take in groceries",
-		"listeners": ["marge"],
-		"manhours": 5
+		"task_name": "pickup from soccer practice",
+		"status": "todo"
+		},
+		{"delegator": "lisa",
+		"delegate": "homer",
+		"task_name": "go to work",
+		"status": "todo"
+		},
+		{"delegator": "homer",
+		"delegate": "homer",
+		"task_name": "get hair cut",
+		"status": "todo"
+		},
+
+		{"delegator": "lisa",
+		"delegate": "lisa",
+		"task_name": "practice saxaphone",
+		"status": "todo"
+		},
+		{"delegator": "marge",
+		"delegate": "lisa",
+		"task_name": "do homework",
+		"status": "todo"
+		},
+		{"delegator": "lisa",
+		"delegate": "lisa",
+		"task_name": "feed snowball",
+		"status": "todo"
+		},
+		{"delegator": "homer",
+		"delegate": "lisa",
+		"task_name": "predict football outcome",
+		"status": "todo"
+		},
+
+		{"delegator": "bart",
+		"delegate": "marge",
+		"task_name": "science project",
+		"status": "todo"
+		},
+		{"delegator": "marge",
+		"delegate": "marge",
+		"task_name": "school lunches",
+		"status": "todo"
+		},
+		{"delegator": "marge",
+		"delegate": "marge",
+		"task_name": "groceries",
+		"status": "todo"
+		},
+		{"delegator": "marge",
+		"delegate": "marge",
+		"task_name": "get hair done",
+		"status": "todo"
 		},
 
 		{"delegator": "homer",
-		"delegate": "marge",
-		"task_name": "sexy times",
-		"listeners": ["homer"],
-		"manhours": 4
+		"delegate": "bart",
+		"task_name": "walk the dog",
+		"status": "todo"
 		},
-
-		{"delegator": "homer",
-		"delegate": "marge",
-		"task_name": "bring my lunch to work",
-		"listeners": ["homer"],
-		"manhours": 2
+		{"delegator": "bart",
+		"delegate": "bart",
+		"task_name": "do homework",
+		"status": "todo"
+		},
+		{"delegator": "marge",
+		"delegate": "bart",
+		"task_name": "tidy room",
+		"status": "todo"
+		},
+		{"delegator": "lisa",
+		"delegate": "bart",
+		"task_name": "copy homework",
+		"status": "todo"
 		}
-
-
 	]
 }

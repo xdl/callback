@@ -64,6 +64,20 @@ app.get('/', function(req, res) {
 	res.render("index");
 });
 
+//god, sort these out!
+
+//bulk adding
+app.post('/import/tasks', function(req, res) {
+	var task_array = req.body.data;
+	models.Task.createTasks(task_array, function(err, docs) {
+		if (err) {
+			throw err;
+		} else {
+			res.send(200, docs);
+		}
+	});
+});
+
 app.get('/users/me', function(req, res) {
 	var username = req.session.username;
 	models.User.findById(username, function(err, doc) {
@@ -71,31 +85,81 @@ app.get('/users/me', function(req, res) {
 	});
 });
 
-app.put('/users/me/tasks/:id', function(req, res) {
-	var id = req.params.id;
-	models.Task.switchTask();
-	console.log(id);
-
-});
-
-app.get('/users/me/tasks', function(req, res) {
-	var username = req.session.username;
-	models.Task.findByUser(username, function(err, docs) {
-		res.send(docs);
-	});
-});
-
-app.get('/users/me/team/:id', function(req, res) {
-	var team = req.params.id;
+//get all users (of a team)
+app.get('/users', function(req, res) {
+	var team = req.session.team;
 	models.User.findByTeam(team, function(err, docs) {
 		res.send(docs);
 	});
 
 });
 
+app.get('/users/:id', function(req, res) {
+	console.log('i dont think this is ever called');
+	console.log('req.session.loggedIn:', req.session.loggedIn);
+	var username = req.session.username;
 
-app.post('/accounts/authenticated', function(req, res) {
-	if (req.session.loggedIn){
+	if (!username) {
+	}
+	models.User.findById(username, function(err, doc) {
+		res.send(doc);
+	});
+});
+
+//for changeTask
+app.put('/users/me/:id',function(req, res) {
+	var user = req.body;
+	models.User.changeTask(user, function(err) {
+		if (err) {
+			throw err;
+		} else {
+			res.send(200);
+		}
+	});
+});
+
+//for registering
+app.post('/create', function(req,res) {
+	models.User.create
+});
+
+
+//for createTask
+app.post('/tasks', function(req, res) {
+	console.log('app - post request received');
+	var task = req.body;
+	console.log('task:', task);
+	models.Task.createTask(task, function(err, doc) {
+		res.send(200, doc);
+	});
+});
+
+//for t1.done()
+app.put ('/tasks/:id', function(req, res) {
+	var task = req.body;
+	models.Task.markDone(task, function(err) {
+		if (err) {
+			throw err;
+		} else {
+			res.send(200);
+		}
+	});
+	console.log(task);
+});
+
+//get all the tasks
+app.get('/tasks', function(req, res) {
+	var username = req.session.username;
+	models.Task.findByUser(username, function(err, docs) {
+		res.send(docs);
+	});
+});
+
+
+
+app.post('/authenticated', function(req, res) {
+	console.log('req.session:', req.session);
+	if (req.session.loggedIn && req.session.preview != true){
 		res.send(200);
 	} else {
 		res.send(401);
@@ -105,21 +169,50 @@ app.post('/accounts/authenticated', function(req, res) {
 app.post('/login', function(req, res) {
 	var user = req.param('username', null);
 	var password = req.param('password', null);
-	models.User.login(user, password, function(err, doc) {
-		if (err)
-			throw err;
-		else if (!doc) {
-			res.send(401);
-		} else {
-			req.session.loggedIn = true;
-			req.session.username = doc.username;
-			res.send(200);
-		}
-	});
+	var temp = req .param('preview', null);
+
+	if (temp) {
+		models.Debug.regenerateTasks(function() {
+			models.User.login(user, password, function(err, doc) {
+				if (err)
+					throw err;
+				else if (!doc) {
+					res.send(401);
+				} else {
+					req.session.preview = true;
+					req.session.loggedIn = true;
+					req.session.username = doc.username;
+					req.session.user_id = doc._id;
+					req.session.team = doc.team;
+					console.log('login from preview successful. set login details.');
+					res.send(200);
+				}
+			});
+		});
+	}
+
+	else {
+		models.User.login(user, password, function(err, doc) {
+			if (err)
+				throw err;
+			else if (!doc) {
+				res.send(401);
+			} else {
+				req.session.loggedIn = true;
+				req.session.username = doc.username;
+				req.session.user_id = doc._id;
+				req.session.team = doc.team;
+				console.log('login successful. set login details.');
+				res.send(200);
+			}
+		});
+	}
+
 });
 
 app.post('/logout', function(req, res) {
-	req.session = null;
+	console.log('logging out');
+	req.session.destroy();
 	res.send(200);
 });
 

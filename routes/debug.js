@@ -14,6 +14,10 @@ module.exports = function(app, models, helpers) {
 		});
 	});
 
+	app.get('/debug/getsession', function(req, res) {
+		res.send(req.session);
+	});
+
 	app.delete('/debug/users', function(req, res) {
 		models.Debug.removeUsers(helpers.callback(res));
 	});

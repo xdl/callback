@@ -3,7 +3,7 @@ module.exports = function(mongoose) {
 		username: {type: String, unique: true},
 		password: {type: String},
 		task_id: {type: String},
-		task_name: {type: String},
+		active_task: {type: String},
 		team: {type:String}
 	}, {collection: 'users'});
 
@@ -21,9 +21,14 @@ module.exports = function(mongoose) {
 		User.find({team: team}, {'__v': 0}, callback);
 	};
 
+	var changeTask = function(user, callback) {
+		User.update({_id: user._id}, {active_task: user.active_task, task_id: user.task_id}, callback);
+	};
+
 	return {
 		login: login,
 		findById: findById,
-		findByTeam: findByTeam
+		findByTeam: findByTeam,
+		changeTask: changeTask
 	};
 }

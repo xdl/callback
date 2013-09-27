@@ -1,18 +1,7 @@
-define(['views/base', 'text!templates/user.html'], function(BaseView, UserTemplate) {
-	var User = BaseView.extend({
-		tagName: 'li',
+define(['views/entry', 'text!templates/user.html'], function(EntryView, UserTemplate) {
 
+	var User = EntryView.extend({
 		template: _.template(UserTemplate),
-
-		events: {
-		},
-
-		render: function() {
-			this.$el.html(this.template(this.model.toJSON()));
-			return this;
-		}
-
-
 	});
 
 	return User;

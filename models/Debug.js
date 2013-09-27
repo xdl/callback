@@ -18,7 +18,7 @@ module.exports = function(mongoose, fs, async) {
 					else {
 						async.series([function(cb) {
 							async.each(sample_users, function(user, c) {
-								Task.create({delegate: user.username, task_name: "idle"}, c); //create an idle task for them.
+								Task.create({delegate: user.username, task_name: "idle", status: "null"}, c); //create an idle task for them.
 							}, cb);
 						}, function(cb) {
 							async.each(sample_users, function(user, c) {
@@ -29,11 +29,9 @@ module.exports = function(mongoose, fs, async) {
 							}, cb);
 						}, function(cb) {
 							async.each(sample_users, function(user, c) {
-								User.update({username: user.username}, {task_id: idle_ids[user.username], task_name: "idle"}, {upsert: true}, c); //place it in the user.
+								User.update({username: user.username}, {task_id: idle_ids[user.username], active_task: "idle"}, {upsert: true}, c); //place it in the user.
 							}, cb);
 						}], callback);
-
-						//I CANNOT believe this worked! I'm a fricking genius!!!
 
 					}
 				});
@@ -68,31 +66,6 @@ module.exports = function(mongoose, fs, async) {
 				throw err;
 			else {
 				var sample_tasks = JSON.parse(payload).tasks;
-				//convert the _id strings into objectIDs
-//				sample_tasks.forEach(function(element, index, array) {
-//					var id;
-//					if (id = element._id) {
-//						element._id = mongoose.Types.ObjectId(id);
-//					}
-//				});
-				
-				//need to now make sure the user has the active_task id for idle.
-				//Task.create(sample_tasks, function(err) {
-				//	if (err)
-				//		throw err;
-				//	else {
-				//		Task.findOne({'task':'idle'}, {}, function(err, doc) {
-				//			if (err)
-				//				throw err;
-				//			else {
-				//				var id = doc._id;
-				//				User.findByIdAndUpdate(
-
-				//			}
-				//		});
-				//	}
-				//});
-
 				Task.create(sample_tasks, callback);
 			}
 		});
@@ -105,6 +78,26 @@ module.exports = function(mongoose, fs, async) {
 	var removeTasks = function(callback) {
 		Task.remove({}, callback);
 	};
+
+	var regenerateTasks = function(callback) {
+		fs.readFile('./testing/testing_data.txt', 'utf8', function(err, payload) {
+			if (err)
+				throw err;
+			else {
+				Task.remove({}, function(err) {
+					if (err)
+						throw err;
+					else {
+						console.log('successfully removed tasks. Now regenerating:');
+						var sample_tasks = JSON.parse(payload).tasks;
+						Task.create(sample_tasks, callback);
+					}
+				});
+			}
+		});
+	};
+
+
 
 	var removeEverything = function(callback) {
 		if(mongoose.connection.collections['users'])
@@ -121,6 +114,8 @@ module.exports = function(mongoose, fs, async) {
 		populateTasks: populateTasks,
 		showTasks: showTasks,
 		removeTasks: removeTasks,
+
+		regenerateTasks: regenerateTasks,
 
 		removeEverything: removeEverything
 	};

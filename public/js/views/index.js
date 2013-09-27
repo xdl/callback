@@ -1,23 +1,49 @@
-define(['views/base', 'text!templates/index.html'], function(BaseView, IndexTemplate) {
+define(['views/base', 'views/debug', 'text!templates/index.html'], function(BaseView, DebugView, IndexTemplate) {
 	var IndexView = BaseView.extend({
 		el: $("#content"),
 
 		events: {
+			'click a#preview': 'preview',
+			'click a#create': 'create',
 			'submit form#login':'handleLogin'
 		},
+		previewAccounts: [
+			'homer',
+			'marge',
+			'bart',
+			'lisa'
+		],
 		render: function() {
 			this.$el.html(IndexTemplate);
-
-			//inserting the subview
-			//this.debug = new DebugView();
-			//this.debug.setElement(this.$('.debug_panel')).render();
 		},
+		create: function(e) {
+			e.preventDefault();
+			console.log('yes');
+			window.location.hash = 'create';
+			console.log('hmm');
+		},
+		preview: function(e) {
+			e.preventDefault();
+			var rand = Math.floor(Math.random()*4);
+			var user = this.previewAccounts[rand];
+			var username = user;
+			var password = user;
 
+			$.ajax('/login', {
+				type: "POST",
+				data: {username: username, password: password, preview: true},
+				success: function() {
+					window.location.hash = 'preview';
+				},
+				error: function() {
+				}
+			});
+		},
 		//testing stuff here.
 		handleLogin: function(e) {
 			e.preventDefault();
-			var username = $('input[name=user]').val();
-			var password = $('input[name=password]').val();
+			var username = this.$('input[name=user]').val();
+			var password = this.$('input[name=password]').val();
 
 			$.ajax('/login', {
 				type: "POST",

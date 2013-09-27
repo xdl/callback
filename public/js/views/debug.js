@@ -1,5 +1,5 @@
 //the debug console.
-define(['views/base', 'text!templates/debug.html'], function(BaseView, DebugTemplate) {
+define(['views/base', 'text!templates/debug.html', 'testing/callback'], function(BaseView, DebugTemplate, callback) {
 	var DebugView = BaseView.extend({
 
 		el:'body',
@@ -15,13 +15,45 @@ define(['views/base', 'text!templates/debug.html'], function(BaseView, DebugTemp
 
 			'click button#remove_everything': 'test_removeEverything',
 
-			'click button#add_task': 'test_switchTask'
+			'click button#add_task': 'test_switchTask',
+
+			'click button.panelTesting': 'panel',
+
+			'click button#task_collection': 'printCollection',
+			'click button#directory': 'printDirectory',
+			'click button#model': 'printModel',
+
+			'click button#debug_callback':'printCallback',
+
+			'click button#getsession':'getSession'
 		},
-		
+		printCallback:function() {
+			console.log(callback);
+		},
+		printModel:function(){
+			Backbone.trigger('debugPrintModel');
+		},
+		printDirectory:function() {
+			Backbone.trigger('debugPrintDirectory');
+		},
+		printCollection:function() {
+			Backbone.trigger('debugPrintTasks');
+		},
+		panel: function(e) {
+			//not going to validate here
+			var command = e.target.innerHTML;
+			var response = callback.process(command);
+			console.log('response:', response);
+			Backbone.trigger(response.method, response);
+		},
+		getSession:function() {
+			$.get('debug/getsession', function(payload) {
+				console.log('session:', payload);
+			});
+		},
 		render: function() {
 			this.$el.prepend(DebugTemplate);
 		},
-
 		test_removeEverything: function() {
 			console.log('removing database...');
 			$.ajax('/debug/everything', {
