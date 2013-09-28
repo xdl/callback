@@ -18,9 +18,7 @@ define(['views/base', 'views/debug', 'text!templates/index.html'], function(Base
 		},
 		create: function(e) {
 			e.preventDefault();
-			console.log('yes');
 			window.location.hash = 'create';
-			console.log('hmm');
 		},
 		preview: function(e) {
 			e.preventDefault();
@@ -50,7 +48,7 @@ define(['views/base', 'views/debug', 'text!templates/index.html'], function(Base
 				data: {username: username, password: password},
 				success: function() {
 					console.log('successfully logged in');
-					window.location.hash = 'l_index';
+					window.location.hash = 'debug';
 				},
 				error: function() {
 					console.log('failed login');

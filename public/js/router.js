@@ -1,11 +1,12 @@
-define(['views/index', 'views/l_index', 'views/create', 'models/User'], function(IndexView, L_IndexView, CreateView, User) {
+define(['views/index', 'views/l_index', 'views/create', 'views/debug', 'models/User'], function(IndexView, L_IndexView, CreateView, DebugView, User) {
 	var Router = Backbone.Router.extend({
 		currentView: null,
 		routes: {
 			"index": "index",
 			"l_index": "l_index",
 			"preview": "preview",
-			"create": "create"
+			"create": "create",
+			"debug": "debug"
 		},
 		changeView: function(v) {
 			if (this.currentView != null) {
@@ -24,6 +25,9 @@ define(['views/index', 'views/l_index', 'views/create', 'models/User'], function
 		//just an alias for l_index really
 		preview: function() {
 			this.l_index();
+		},
+		debug: function() {
+			this.changeView(new DebugView());
 		},
 		create: function() {
 			this.changeView(new CreateView());

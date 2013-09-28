@@ -2,7 +2,8 @@
 define(['views/base', 'text!templates/debug.html', 'testing/callback'], function(BaseView, DebugTemplate, callback) {
 	var DebugView = BaseView.extend({
 
-		el:'body',
+		//el:'body',
+		el: $("#content"),
 
 		events: {
 			'click button#populate_sample_users':'test_populateUsers',
