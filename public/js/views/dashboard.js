@@ -26,7 +26,6 @@ define(['views/base', 'text!templates/dashboard.html'], function(BaseView, Dashb
 		},
 		handleLogout: function() {
 			$.post('/logout', function() {
-				console.log('logging out');
 				window.location.hash = 'index';
 			});
 		}

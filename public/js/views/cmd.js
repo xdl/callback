@@ -10,7 +10,6 @@ define(['views/base', 'text!templates/cmd.html', 'testing/callback', 'docs'], fu
 
 			this.$('#cmd').attr('placeholder', this.instructions.default);
 			this.outcome = this.$('#outcome');
-			//console.log('this.outcome:', this.outcome);
 			this.outcome.hide();
 		},
 		instructions: {
@@ -279,20 +278,16 @@ define(['views/base', 'text!templates/cmd.html', 'testing/callback', 'docs'], fu
 			if (pointer != -1) {
 				var histVal = stack[pointer];
 				cmd.val(histVal);
-				console.log('scrolling up');
 			} else {
 				cmd.val('');
 			}
 
 			this.history.pointer = pointer;
-			console.log('this.history.stack:', this.history.stack);
-			console.log('pointer:', pointer);
 		},
 		store:function(req) {
 			var stack = this.history.stack;
 			var pointer = this.history.pointer;
 			stack.unshift(req);
-			console.log('stack:', stack);
 			if (stack.length > this.history.MAX_SIZE) {
 				stack.pop();
 			}

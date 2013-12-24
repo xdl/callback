@@ -41,6 +41,7 @@ define(['views/base', 'text!templates/user_panel.html', 'views/user'], function(
 			var taskName = this.Directory.tasks.assigned[res.info.task].task_name;
 			var taskID = this.Directory.tasks.assigned[res.info.task]._id;
 			this.render();
+
 		},
 		users: [],
 		renderUsers: function() {

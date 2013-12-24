@@ -16,7 +16,7 @@ app.configure(function() {
 
 	var env = app.get('env');
 	console.log('environment:', env);
-	//env = 'production'; //just checking...
+	env = 'production'; //just checking...
 	if (env == 'development') {
 		dbPath = 'mongodb://localhost/callback';
 	} else if (env == 'production') {

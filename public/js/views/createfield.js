@@ -22,7 +22,6 @@ define(['views/base', 'text!templates/createfield.html'], function(BaseView, Cre
 
 		},
 		growl: function(message) {
-			console.log('message:', message);
 		},
 		destroy: function() {
 			this.stopListening();

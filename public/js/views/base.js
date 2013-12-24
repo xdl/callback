@@ -1,7 +1,6 @@
 define([], function() {
 	var BaseView = Backbone.View.extend({
 		close: function() {
-			console.log('calling close');
 			this.stopListening();
 			this.unbind();
 

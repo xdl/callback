@@ -136,7 +136,6 @@ define(['views/base', 'text!templates/task_panel.html', 'views/task'], function 
 				_this.childViews.push(taskview);
 				tasksFrag.appendChild(taskview.render().el);
 			});
-			console.log('_this.Directory:', _this.Directory);
 			$('.tasks').append(tasksFrag);
 			this.hideDetails();
 		},
@@ -144,8 +143,6 @@ define(['views/base', 'text!templates/task_panel.html', 'views/task'], function 
 			this.$('.details').hide();
 		},
 		createTask: function(obj) {
-			//console.log('obj:', obj);
-
 			//need to determine what kind of task or tasks you want to create:
 			var _this = this;
 
@@ -153,30 +150,16 @@ define(['views/base', 'text!templates/task_panel.html', 'views/task'], function 
 			var num_users = obj.info.users.length;
 			var callback = obj.info.callback;
 			var delegator = this.model.get('username');
-			//console.log('users:', num_users);
-
-			//console.log('num_tasks:', num_tasks);
-			//console.log('num_users:', num_users);
 
 			if (num_tasks == 1) { //personal: Let's start small
-				//var task = new Task;
-				//console.log('task cid:', task.cid); //hmm defintely can't use these as ids! Need to fetch it from mongodb it seems.
-				//
-				//
-
 				var task_name = obj.info.tasks[0];
 				var delegate;
 
-				console.log('Directory:', this.Directory);
-				console.log('obj.info.users[0]:', obj.info.users[0]);
 				if (_this.Directory.users.pub[obj.info.users[0]]) {
 					delegate = _this.Directory.users.pub[obj.info.users[0]].username;
 				} else {
 					delegate = delegator;
 				}
-
-				console.log('callback:', obj.info.callback);
-				//console.log('callback:', obj.info.callback.toJSON());
 
 				this.collection.create({
 					delegator: delegator,
@@ -233,22 +216,19 @@ define(['views/base', 'text!templates/task_panel.html', 'views/task'], function 
 					type: "POST",
 					data: {data:task_array},
 					success:function() {
-						console.log('done adding a bunch of tasks, possibly for other people');
 						_this.reFetch();
 					},
 					error:function() {
-						console.log('yikes! must be an error.');
+						console.log('yikes! Something\'s gone wrong.');
 					}
 				});
 			}
 		},
 		dealWithCallback:function(obj) {
 			var callback = obj.context.object.callback;
-			//console.log('obj:', obj);
 			if (callback == 'nothing') {
 				//do whatever the regular thing is
 			} else {
-				//console.log('callback:', callback);
 				Backbone.trigger(callback.method, callback);
 			}
 		},
@@ -257,10 +237,8 @@ define(['views/base', 'text!templates/task_panel.html', 'views/task'], function 
 		},
 		done:function(obj) {
 			//get the object's task ID:
-			console.log('obj:', obj);
 			var comment = obj.info.comment;
 			var task_id = obj.context.object._id;
-			//console.log('task_id:', task_id);
 			var model = this.collection.get(task_id);
 
 			if (model.get('status') != 'done') { // so callbacks aren't triggered twice

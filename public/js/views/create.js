@@ -53,7 +53,6 @@ define(['views/base', 'views/createfield', 'text!templates/create.html'], functi
 			}
 		},
 		submit: function() {
-			console.log('everything ready to submit.');
 		},
 		template:_.template(CreateTemplate),
 		render:function() {
@@ -68,8 +67,6 @@ define(['views/base', 'views/createfield', 'text!templates/create.html'], functi
 			}
 		},
 		refresh:function() {
-			//console.log('this.fields.length:', this.fields.length);
-			//console.log('this.MAX_FIELDS:', this.MAX_FIELDS);
 			if (this.fields.length == this.MAX_FIELDS) {
 				this.$('.add').empty();
 			} else {
@@ -78,7 +75,6 @@ define(['views/base', 'views/createfield', 'text!templates/create.html'], functi
 		},
 		addField:function() {
 			if (this.fields.length != this.MAX_FIELDS) {
-				//console.log('hi');
 				var field = new CreateField({number:this.fields.length});
 				this.fields.push(field);
 

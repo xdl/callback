@@ -22,7 +22,6 @@ define(['views/base'], function(BaseView) {
 		},
 		unbindAndHide: function(e) {
 			Backbone.trigger('hint_off');
-			console.log('e:', e);
 			var _this = e.data._this;
 			$(document).unbind('keydown', _this.unbindAndHide);
 			$(document).unbind('mousedown', _this.unbindAndHide);

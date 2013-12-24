@@ -47,7 +47,6 @@ define(['views/base', 'views/debug', 'text!templates/index.html'], function(Base
 				type: "POST",
 				data: {username: username, password: password},
 				success: function() {
-					console.log('successfully logged in');
 					window.location.hash = 'debug';
 				},
 				error: function() {
